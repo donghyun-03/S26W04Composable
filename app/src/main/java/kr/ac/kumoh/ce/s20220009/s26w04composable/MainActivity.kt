@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kr.ac.kumoh.ce.s20220009.s26w04composable.ui.theme.S26W04ComposableTheme
@@ -48,25 +47,42 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
+    var count1 by remember { mutableIntStateOf(0) }
+    var count2 by remember { mutableIntStateOf(0) }
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
-            modifier = Modifier
-                .padding(innerPadding),
+            modifier = Modifier.padding(innerPadding),
         ) {
-            Counter()
+            Counter(
+                modifier = Modifier.background(Color(0xFFE8DEF8)),
+                count = count1
+            ) {
+                count1 = it
+            }
+
+            Counter(
+                modifier = Modifier.background(Color(0XFFE9F680)),
+                count = count2
+            ) {
+                count2 = it
+            }
         }
     }
 }
 
 @Composable
-fun ColumnScope.Counter(){
-    var count by remember {mutableIntStateOf(0)}
+fun ColumnScope.Counter(
+    modifier: Modifier = Modifier,
+    count: Int,
+    onChangeCount: (Int) -> Unit,
+){
+//    var count by remember {mutableIntStateOf(0)}
     var expanded by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .weight(1F)
-            .padding(8.dp).background(Color(0XFFE9F680)),
+            .padding(8.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -87,7 +103,7 @@ fun ColumnScope.Counter(){
                     .weight(1f)
                     .padding(8.dp),
                 onClick = {
-                    count++
+                    onChangeCount(count + 1)
                 }
             ) {
                 Icon(
@@ -116,7 +132,7 @@ fun ColumnScope.Counter(){
                         .weight(1f)
                         .padding(8.dp),
                     onClick = {
-                        count--
+                        onChangeCount(count - 1)
                         expanded = false
                     }
                 ) {
@@ -127,7 +143,7 @@ fun ColumnScope.Counter(){
                         .weight(1f)
                         .padding(8.dp),
                     onClick = {
-                        count = 0
+                        onChangeCount(0)
                         expanded = false
                     }
                 ) {
